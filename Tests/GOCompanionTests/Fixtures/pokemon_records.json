@@ -1,0 +1,14 @@
+[
+  {"fixture":"normal","species":"pikachu","form":"normal","cp":742,"ivs":[10,11,12],"traits":[],"moves":["thunder_shock","wild_charge"],"expected":"keep"},
+  {"fixture":"master-league","species":"mewtwo","form":"normal","cp":4724,"ivs":[15,15,15],"traits":[],"moves":["psycho_cut","psystrike"],"expected":"ML"},
+  {"fixture":"pvp-iv","species":"lanturn","form":"normal","cp":1488,"ivs":[0,13,14],"traits":[],"moves":["spark","surf"],"expected":"GL"},
+  {"fixture":"shadow","species":"machamp","form":"normal","cp":2850,"ivs":[13,14,12],"traits":["shadow"],"moves":["counter","frustration"],"expected":"hold"},
+  {"fixture":"dynamax","species":"metagross","form":"normal","cp":3620,"ivs":[14,15,14],"traits":["dynamax"],"moves":["bullet_punch","meteor_mash"],"expected":"Max"},
+  {"fixture":"gigantamax","species":"charizard","form":"normal","cp":2860,"ivs":[14,14,15],"traits":["gigantamax"],"moves":["fire_spin","overheat"],"expected":"Max"},
+  {"fixture":"mega-capable","species":"gardevoir","form":"normal","cp":3010,"ivs":[15,14,14],"traits":["megaCapable"],"moves":["charm","psychic"],"expected":"MegaNew"},
+  {"fixture":"mega-unlocked","species":"gengar","form":"normal","cp":3250,"ivs":[15,15,14],"traits":["megaCapable","megaUnlocked"],"moves":["lick","shadow_ball"],"expected":"Mega"},
+  {"fixture":"poor-moves","species":"rhyperior","form":"normal","cp":3600,"ivs":[15,13,14],"traits":[],"moves":["mud_slap","surf"],"expected":"NeedsTM"},
+  {"fixture":"elite-tm","species":"swampert","form":"normal","cp":2482,"ivs":[3,14,15],"traits":[],"moves":["mud_shot","surf"],"expected":"EliteTM"},
+  {"fixture":"transfer","species":"rattata","form":"normal","cp":221,"ivs":[4,5,5],"traits":[],"moves":["tackle","dig"],"expected":"Transfer"},
+  {"fixture":"trade","species":"tauros","form":"normal","cp":1210,"ivs":[7,8,7],"traits":[],"moves":["tackle","horn_attack"],"expected":"Trade"}
+]
