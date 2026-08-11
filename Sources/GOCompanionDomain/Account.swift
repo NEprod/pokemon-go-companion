@@ -54,6 +54,11 @@ public struct ResourceAmount: Codable, Hashable, Sendable {
 public struct Inventory: Codable, Hashable, Sendable {
     public let profileID: UUID
     public var resources: [ResourceAmount]
+
+    public init(profileID: UUID, resources: [ResourceAmount]) {
+        self.profileID = profileID
+        self.resources = resources
+    }
 }
 
 public struct StorageProfile: Codable, Hashable, Sendable {
@@ -62,12 +67,32 @@ public struct StorageProfile: Codable, Hashable, Sendable {
     public var bagUsed: Int
     public var bagCapacity: Int
     public var observedAt: Date
+
+    public init(
+        pokemonUsed: Int,
+        pokemonCapacity: Int,
+        bagUsed: Int,
+        bagCapacity: Int,
+        observedAt: Date
+    ) {
+        self.pokemonUsed = pokemonUsed
+        self.pokemonCapacity = pokemonCapacity
+        self.bagUsed = bagUsed
+        self.bagCapacity = bagCapacity
+        self.observedAt = observedAt
+    }
 }
 
 public struct BuildPlanStep: Codable, Hashable, Sendable {
     public let action: RecommendationAction
     public let resourceCosts: [String: Int]
     public var completed: Bool
+
+    public init(action: RecommendationAction, resourceCosts: [String: Int], completed: Bool = false) {
+        self.action = action
+        self.resourceCosts = resourceCosts
+        self.completed = completed
+    }
 }
 
 public struct BuildPlan: Codable, Hashable, Sendable {
@@ -76,6 +101,14 @@ public struct BuildPlan: Codable, Hashable, Sendable {
     public var title: String
     public var steps: [BuildPlanStep]
     public var createdAt: Date
+
+    public init(id: UUID = UUID(), pokemonID: UUID, title: String, steps: [BuildPlanStep], createdAt: Date = Date()) {
+        self.id = id
+        self.pokemonID = pokemonID
+        self.title = title
+        self.steps = steps
+        self.createdAt = createdAt
+    }
 }
 
 public enum EventOpportunityType: String, Codable, Sendable {

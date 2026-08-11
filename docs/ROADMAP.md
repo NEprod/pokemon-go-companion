@@ -6,11 +6,11 @@ Status labels: **done foundation**, **next**, **planned**. A phase is complete o
 
 Technology evaluation/ADRs; repository and VS Code/Git/CI setup; durable product/docs; shared domain types; three-database schema and explicit migrations; provider/source/normalized/derived cache contracts; fake fixture coverage; initial tests and formatting. There is intentionally no product UI or later-phase behavior.
 
-## Phase 1 — core collection engine (**next**)
+## Phase 1 — core collection engine (**implemented; review pending**)
 
-Implement repository/application use cases for Pokémon UUID records, accepted observations, transactional history, manual create/edit, state transitions and archive restoration; role/tag/recommendation framework with safe confidence policy; duplicate/reconciliation foundations; JSON/CSV export and full backup/restore; repository/migration/history/safety tests. Do not add scanner or live providers.
+Implemented repository/application use cases for Pokémon UUID records, accepted observations, transactional immutable history, manual create/edit, active/archive restoration, Transfer/Trade confirmation foundations, multiple roles, internal/recommended GO-tag persistence, safe versioned JSON export and empty-database restore, filters/pagination, optimistic revisions, and rollback/migration/safety tests.
 
-Recommended first vertical slice: create/update/archive/restore one specimen in `user.sqlite`, append auditable history atomically, expose a repository protocol, and prove round-trip/export tests.
+CSV export, merge import, sophisticated reconciliation/duplicate matching, inventory/build-plan services, and production recommendation rules remain later work. They are not represented as complete.
 
 ## Phase 2 — game knowledge/cache (**planned**)
 

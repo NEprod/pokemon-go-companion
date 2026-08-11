@@ -8,12 +8,16 @@ import Testing
     defer { try? FileManager.default.removeItem(at: root) }
 
     let databases = try DatabaseSet(directory: root)
-    #expect(try databases.user.scalarInt("SELECT COUNT(*) FROM schema_migrations") == 1)
+    #expect(try databases.user.scalarInt("SELECT COUNT(*) FROM schema_migrations") == 2)
     #expect(try databases.knowledge.scalarInt("SELECT COUNT(*) FROM schema_migrations") == 1)
     #expect(try databases.derived.scalarInt("SELECT COUNT(*) FROM schema_migrations") == 1)
     #expect(try databases.user.scalarInt("SELECT COUNT(*) FROM sqlite_master WHERE name = 'pokemon'") == 1)
     #expect(try databases.knowledge.scalarInt("SELECT COUNT(*) FROM sqlite_master WHERE name = 'species_forms'") == 1)
     #expect(try databases.derived.scalarInt("SELECT COUNT(*) FROM sqlite_master WHERE name = 'derived_entries'") == 1)
+    try MigrationRunner().migrate(databases.user, using: MigrationCatalog.load(for: .user))
+    #expect(try databases.user.scalarInt("SELECT COUNT(*) FROM schema_migrations") == 2)
+    #expect(try databases.user.scalarInt("SELECT COUNT(*) FROM sqlite_master WHERE name = 'recommended_go_tags'") == 1)
+    #expect(try databases.user.scalarInt("SELECT COUNT(*) FROM sqlite_master WHERE name = 'pokemon_roles'") == 1)
 }
 
 @Test func migrationsAreIdempotentAndDetectMutation() throws {

@@ -43,10 +43,11 @@ import Testing
     let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
     let records = try #require(object as? [[String: Any]])
     let names = Set(records.compactMap { $0["fixture"] as? String })
-    #expect(records.count == 12)
+    #expect(records.count == 17)
     #expect(
         names.isSuperset(of: [
             "normal", "master-league", "pvp-iv", "shadow", "dynamax", "gigantamax", "mega-capable", "mega-unlocked",
-            "poor-moves", "elite-tm", "transfer", "trade",
+            "poor-moves", "elite-tm", "transfer", "trade", "shiny", "lucky", "hold-event", "multiple-roles",
+            "multiple-traits",
         ]))
 }

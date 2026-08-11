@@ -46,11 +46,20 @@ public enum PokemonTrait: String, Codable, CaseIterable, Sendable {
 }
 
 public enum CollectionStatus: String, Codable, Sendable {
-    case active, pendingReview, transferQueue, tradeQueue, archived
+    case active, pendingReview, pendingRemoval
+    case archivedTransferred, archivedTraded, archivedOther
+
+    public var isArchived: Bool {
+        switch self {
+        case .archivedTransferred, .archivedTraded, .archivedOther: true
+        case .active, .pendingReview, .pendingRemoval: false
+        }
+    }
 }
 
 public enum PokemonRole: String, Codable, CaseIterable, Sendable {
     case greatLeague, ultraLeague, masterLeague, raid, maxBattle, mega, collection, trade
+    case luckyCheapBuild, futureEventHold
 }
 
 public enum GOTag: String, Codable, CaseIterable, Sendable {
@@ -80,7 +89,11 @@ public struct PokemonRecord: Codable, Hashable, Sendable {
     public var moves: MoveSet
     public var traits: Set<PokemonTrait>
     public var appliedGOTags: Set<String>
+    public var internalTags: Set<String>
+    public var roles: Set<PokemonRole>
+    public var recommendedGOTags: [RecommendedGOTag]
     public var status: CollectionStatus
+    public var revision: Int
     public var createdAt: Date
     public var updatedAt: Date
 
@@ -94,7 +107,11 @@ public struct PokemonRecord: Codable, Hashable, Sendable {
         moves: MoveSet = MoveSet(),
         traits: Set<PokemonTrait> = [],
         appliedGOTags: Set<String> = [],
+        internalTags: Set<String> = [],
+        roles: Set<PokemonRole> = [],
+        recommendedGOTags: [RecommendedGOTag] = [],
         status: CollectionStatus = .active,
+        revision: Int = 1,
         createdAt: Date = Date(),
         updatedAt: Date = Date()
     ) {
@@ -107,8 +124,51 @@ public struct PokemonRecord: Codable, Hashable, Sendable {
         self.moves = moves
         self.traits = traits
         self.appliedGOTags = appliedGOTags
+        self.internalTags = internalTags
+        self.roles = roles
+        self.recommendedGOTags = recommendedGOTags
         self.status = status
+        self.revision = revision
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+    }
+}
+
+public enum TagRecommendationState: String, Codable, Sendable {
+    case recommended, withdrawn
+}
+
+public enum UserConfirmationState: String, Codable, Sendable {
+    case unknown, confirmedApplied, confirmedNotApplied
+}
+
+public struct RecommendedGOTag: Codable, Hashable, Sendable {
+    public let tag: GOTag
+    public var state: TagRecommendationState
+    public var reason: String
+    public var appearsApplied: Bool
+    public var userConfirmation: UserConfirmationState
+    public let createdAt: Date
+    public var updatedAt: Date
+    public var sourceVersion: String
+
+    public init(
+        tag: GOTag,
+        state: TagRecommendationState = .recommended,
+        reason: String,
+        appearsApplied: Bool = false,
+        userConfirmation: UserConfirmationState = .unknown,
+        createdAt: Date = Date(),
+        updatedAt: Date = Date(),
+        sourceVersion: String
+    ) {
+        self.tag = tag
+        self.state = state
+        self.reason = reason
+        self.appearsApplied = appearsApplied
+        self.userConfirmation = userConfirmation
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.sourceVersion = sourceVersion
     }
 }
