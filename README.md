@@ -4,11 +4,14 @@ GO Account Companion is a private, local-first Pokémon GO account intelligence 
 
 ## Current status
 
-Phase 0 (architecture/repository foundation) only. The repository contains shared domain types, three-database SQLite migration scaffolding, provider/cache contracts, representative fake fixtures, tests, CI, and product/architecture documentation. It does **not** yet contain a UI, scanner, production provider integration, PvP/raid engine, recommendation rules, sync, or mobile app.
+Phase 1 provides the Core Collection Engine: stable specimen UUIDs, transactional create/update/query/archive/restore workflows, immutable history, persisted observations with field-level confidence/provenance, internal tags, roles, recommended GO-tag state, and versioned JSON backup/full restore. Phase 0's three-database and provider-contract foundation remains intact.
+
+There is still **no** UI, scanner, screen capture, production provider integration, PvP/raid calculation, complete recommendation engine, sync, or mobile app.
 
 ## Architecture at a glance
 
 - Swift 6 packages hold platform-independent domain, knowledge contracts, and persistence adapters.
+- `GOCompanionApplication` owns repository ports plus collection and backup use cases; SQLite implements those ports.
 - Future macOS and iOS apps use native SwiftUI shells.
 - Phase 3 macOS capture uses a ScreenCaptureKit adapter for a user-selected iPhone Mirroring window, with user-selected region capture as fallback. It is observation-only.
 - User facts, normalized game knowledge, and disposable derived caches live in separate SQLite files.
@@ -23,7 +26,7 @@ See [Architecture](docs/ARCHITECTURE.md) and [ADR 0001](docs/ADR/0001-native-swi
 - SQLite development headers/library (included with macOS; `libsqlite3-dev` on Linux)
 - VS Code plus the recommended Swift extension, or Xcode
 
-No credentials or network access are required in Phase 0.
+No credentials or network access are required through Phase 1.
 
 ## Build and test
 
@@ -46,6 +49,7 @@ GitHub Actions runs format lint, build, and tests on macOS. Opening the folder i
 ```text
 Sources/
   GOCompanionDomain/       typed user facts, observations, preferences, plans, recommendations
+  GOCompanionApplication/  collection repository ports and lifecycle/backup use cases
   GOCompanionKnowledge/    replaceable provider and three-layer cache contracts
   GOCompanionPersistence/  SQLite adapter and forward migration runner
   CSQLite/                 minimal system-library bridge
@@ -68,4 +72,4 @@ Migrations are immutable after application. New schema work receives a new numbe
 4. Run the three commands above.
 5. Review the diff, commit, and push to a private GitHub repository.
 
-The roadmap deliberately separates foundation from product behavior. The recommended next task is Phase 1's collection repository/history transaction slice; see [Roadmap](docs/ROADMAP.md).
+The JSON format and safe empty-database restore boundary are documented in [Backup Format](docs/BACKUP_FORMAT.md). The roadmap deliberately separates this collection engine from Phase 2 game knowledge; see [Roadmap](docs/ROADMAP.md).

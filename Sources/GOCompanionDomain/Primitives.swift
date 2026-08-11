@@ -15,13 +15,41 @@ public struct Confidence: Codable, Hashable, Sendable {
 
 public struct Observed<Value: Codable & Hashable & Sendable>: Codable, Hashable, Sendable {
     public let value: Value
-    public let confidence: Confidence
+    /// Nil for explicitly confirmed values; numeric confidence is reserved for uncertain evidence.
+    public let confidence: Confidence?
+    public let provenance: FieldProvenance
     public let sourceRegion: String?
 
-    public init(value: Value, confidence: Confidence, sourceRegion: String? = nil) {
+    public init(
+        value: Value,
+        confidence: Confidence?,
+        provenance: FieldProvenance,
+        sourceRegion: String? = nil
+    ) {
         self.value = value
         self.confidence = confidence
+        self.provenance = provenance
         self.sourceRegion = sourceRegion
+    }
+
+    public static func manuallyConfirmed(_ value: Value, source: String? = nil) -> Self {
+        Self(value: value, confidence: nil, provenance: .init(kind: .manuallyConfirmed, source: source))
+    }
+}
+
+public enum EvidenceKind: String, Codable, CaseIterable, Sendable {
+    case manuallyConfirmed, scannerObserved, imported, inferred, unknown
+}
+
+public struct FieldProvenance: Codable, Hashable, Sendable {
+    public let kind: EvidenceKind
+    public let source: String?
+    public let sourceVersion: String?
+
+    public init(kind: EvidenceKind, source: String? = nil, sourceVersion: String? = nil) {
+        self.kind = kind
+        self.source = source
+        self.sourceVersion = sourceVersion
     }
 }
 

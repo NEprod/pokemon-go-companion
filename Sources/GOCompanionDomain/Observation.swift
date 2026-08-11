@@ -32,23 +32,35 @@ public struct ScanSession: Codable, Hashable, Sendable {
 public struct PokemonObservation: Codable, Hashable, Sendable {
     public let id: UUID
     public let scanSessionID: UUID
+    public let pokemonID: UUID?
     public let observedAt: Date
     public var speciesID: Observed<String>?
     public var formID: Observed<String>?
     public var cp: Observed<Int>?
     public var hp: Observed<Int>?
+    public var ivAttack: Observed<Int>?
+    public var ivDefense: Observed<Int>?
+    public var ivStamina: Observed<Int>?
+    /// Convenience aggregate when all IV fields share one evidence source; individual fields remain authoritative.
     public var ivs: Observed<IVs>?
     public var moves: Observed<MoveSet>?
     public var traits: Observed<Set<PokemonTrait>>?
 
-    public init(id: UUID = UUID(), scanSessionID: UUID, observedAt: Date = Date()) {
+    public init(
+        id: UUID = UUID(), scanSessionID: UUID, pokemonID: UUID? = nil,
+        observedAt: Date = Date()
+    ) {
         self.id = id
         self.scanSessionID = scanSessionID
+        self.pokemonID = pokemonID
         self.observedAt = observedAt
         speciesID = nil
         formID = nil
         cp = nil
         hp = nil
+        ivAttack = nil
+        ivDefense = nil
+        ivStamina = nil
         ivs = nil
         moves = nil
         traits = nil

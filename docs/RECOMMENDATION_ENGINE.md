@@ -58,4 +58,4 @@ The debug view should eventually state: game data X, PvP Y, raids Z, events E, r
 
 Use table-driven unit tests for each rule and conflicts; property/boundary tests for calculations; frozen golden explanations; role-aware duplicate scenarios; resource and event alternatives; stale knowledge; and adversarial missing/low-confidence observations. Transfer tests are mandatory fail-safe tests: any uncertain critical fact, protected trait/role, unresolved duplicate, or stale required knowledge must prevent a Transfer recommendation.
 
-No production recommendation rules are implemented in Phase 0; only output/provenance types exist.
+Phase 1 persists recommended GO-tag state, explanation, apparent application, user confirmation, timestamps, and source version. It also implements manual lifecycle foundations for marking Transfer/Trade advice separately from confirmation. No production ranking, duplicate, Transfer-safety, or other recommendation rules are implemented.

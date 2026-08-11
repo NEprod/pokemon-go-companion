@@ -35,7 +35,7 @@ public enum MigrationCatalog {
     static func load(for kind: DatabaseKind, bundle: Bundle) throws -> [Migration] {
         let names: [String]
         switch kind {
-        case .user: names = ["001_user_initial"]
+        case .user: names = ["001_user_initial", "002_user_collection_engine"]
         case .knowledge: names = ["001_knowledge_initial"]
         case .derived: names = ["001_derived_initial"]
         }

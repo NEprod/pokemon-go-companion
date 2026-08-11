@@ -50,9 +50,9 @@ recommendation -> user facts + knowledge + preferences -> ephemeral advice
 
 UI never queries SQLite directly. Domain never imports SwiftUI, ScreenCaptureKit, Vision, CloudKit, or provider-specific DTOs. Capture does not recognize; recognition does not recommend; recommendations do not mutate the game or silently mutate user facts.
 
-## Proposed monorepo growth
+## Current modules and planned growth
 
-Phase 0 package targets are `GOCompanionDomain`, `GOCompanionKnowledge`, `GOCompanionPersistence`, and `CSQLite`. Later targets should add `GOCompanionApplication`, `GOCompanionRecognition`, `GOCompanionRecommendation`, `MacCaptureAdapter`, `MacApp`, and `iOSApp` only when their phase begins. App targets are composition roots for dependency injection.
+Current package targets are `GOCompanionDomain`, `GOCompanionApplication`, `GOCompanionKnowledge`, `GOCompanionPersistence`, and `CSQLite`. Application owns collection repository contracts and use cases; persistence depends inward and implements those ports. Later targets should add `GOCompanionRecognition`, `GOCompanionRecommendation`, `MacCaptureAdapter`, `MacApp`, and `iOSApp` only when their phase begins. App targets are composition roots for dependency injection.
 
 Prefer actors/structured concurrency at I/O boundaries, small value types, protocols owned by the consumer, and explicit error states. Avoid global containers and giant services. External JSON is decoded to provider DTOs, validated, then mapped to canonical models in a transaction.
 
@@ -71,6 +71,8 @@ A scan session receives frames from the chosen adapter, classifies screen type, 
 - **Maintainability:** SPM modules, explicit dependency direction, ADRs, Git/VS Code/CI, replaceable adapters.
 - **Auditability:** UUIDs, append-oriented history, provider/version provenance, explicit errors and stale state.
 
-## Phase 0 implementation truth
+## Phase 1 implementation truth
 
-The checked-in code defines domain values, provider/cache ports, SQLite opening and immutable migration checks, three initial schemas, and tests. It is not yet an application service/repository implementation. No UI, screen capture, OCR, production provider, recommendations, calculations, export, or sync exists.
+The code now provides collection repository/application boundaries, a transactional SQLite implementation, optimistic record revisions, lifecycle/history/observation/tag/role persistence, paginated filters, and versioned JSON export/full restore. Database triggers make collection history append-only, and rollback is tested.
+
+The recommended-tag data structure and “mark recommended” lifecycle are foundations, not a production recommendation engine. No UI, screen capture, OCR, game-data provider, PvP/raid calculation, cloud sync, or gameplay interaction exists.

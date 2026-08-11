@@ -41,8 +41,21 @@ public struct Recommendation: Codable, Hashable, Sendable {
 }
 
 public enum HistoryEventType: String, Codable, Sendable {
-    case scanned, updated, poweredUp, evolved, moveChanged, purified, megaUnlocked
-    case megaProgressed, tagChanged, transferred, traded, archived, reconciled, restored
+    case created, scanned, updated, poweredUp, evolved, moveChanged, secondMoveUnlocked
+    case purified, megaUnlocked, megaProgressed, tagChanged, recommendedTagChanged
+    case transferRecommended, tradeRecommended, transferred, traded, archived, reconciled, restored
+}
+
+public struct HistoryChange: Codable, Hashable, Sendable {
+    public let field: String
+    public let previousValue: String?
+    public let newValue: String?
+
+    public init(field: String, previousValue: String? = nil, newValue: String? = nil) {
+        self.field = field
+        self.previousValue = previousValue
+        self.newValue = newValue
+    }
 }
 
 public struct CollectionHistoryEvent: Codable, Hashable, Sendable {
@@ -50,16 +63,26 @@ public struct CollectionHistoryEvent: Codable, Hashable, Sendable {
     public let pokemonID: UUID
     public let type: HistoryEventType
     public let occurredAt: Date
-    public let payloadJSON: String?
+    public let reason: String?
+    public let source: String
+    public let changes: [HistoryChange]
+    public let provenance: FieldProvenance?
+    public let correlationID: UUID
 
     public init(
         id: UUID = UUID(), pokemonID: UUID, type: HistoryEventType,
-        occurredAt: Date = Date(), payloadJSON: String? = nil
+        occurredAt: Date = Date(), reason: String? = nil, source: String,
+        changes: [HistoryChange] = [], provenance: FieldProvenance? = nil,
+        correlationID: UUID = UUID()
     ) {
         self.id = id
         self.pokemonID = pokemonID
         self.type = type
         self.occurredAt = occurredAt
-        self.payloadJSON = payloadJSON
+        self.reason = reason
+        self.source = source
+        self.changes = changes
+        self.provenance = provenance
+        self.correlationID = correlationID
     }
 }
