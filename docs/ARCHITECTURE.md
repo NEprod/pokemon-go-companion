@@ -52,7 +52,9 @@ UI never queries SQLite directly. Domain never imports SwiftUI, ScreenCaptureKit
 
 ## Current modules and planned growth
 
-Current package targets are `GOCompanionDomain`, `GOCompanionApplication`, `GOCompanionKnowledge`, `GOCompanionPersistence`, and `CSQLite`. Application owns collection repository contracts and use cases. Knowledge owns provider/cache ports, canonical reference models, validation and deterministic calculation services. Persistence depends inward and implements both collection and knowledge/cache ports. Later targets should add `GOCompanionRecognition`, `GOCompanionRecommendation`, `MacCaptureAdapter`, `MacApp`, and `iOSApp` only when their phase begins. App targets are composition roots for dependency injection.
+Current shared package targets are `GOCompanionDomain`, `GOCompanionApplication`, `GOCompanionKnowledge`, `GOCompanionPersistence`, and `CSQLite`. Application owns collection repository contracts and use cases. Knowledge owns provider/cache ports, canonical reference models, validation and deterministic calculation services. Persistence depends inward and implements both collection and knowledge/cache ports. Later targets should add `GOCompanionRecognition`, `GOCompanionRecommendation`, `MacApp`, and `iOSApp` only when their phase begins. App targets are composition roots for dependency injection.
+
+Phase 3A adds macOS-only `GOCompanionCapture` contracts, `MacCaptureAdapter`, and the `CaptureDiagnostic` executable. Only the adapter imports ScreenCaptureKit. The diagnostic exercises user-selected window capture and reports received frame metadata; it does not create observations or collection facts. Dale manually verified usable, changing Pokémon GO frames from Apple's iPhone Mirroring window. See `SCANNING.md`.
 
 Prefer actors/structured concurrency at I/O boundaries, small value types, protocols owned by the consumer, and explicit error states. Avoid global containers and giant services. External JSON is decoded to provider DTOs, validated, then mapped to canonical models in a transaction.
 
