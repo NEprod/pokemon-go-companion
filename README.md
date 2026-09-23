@@ -6,7 +6,7 @@ GO Account Companion is a private, local-first Pokémon GO account intelligence 
 
 Phase 1 provides the Core Collection Engine: stable specimen UUIDs, transactional create/update/query/archive/restore workflows, immutable history, persisted observations with field-level confidence/provenance, internal tags, roles, recommended GO-tag state, and versioned JSON backup/full restore. Phase 2 adds a versioned raw/normalized/derived knowledge cache, atomic previous-good activation/rollback, deterministic CP/HP/reverse-level calculations, and cached 4,096-spread PvP IV rankings over frozen synthetic fixtures.
 
-There is still **no** UI, scanner, screen capture, production data provider, species/meta ranking, battle/raid simulation, complete recommendation engine, sync, or mobile app. Synthetic fixture values are not live Pokémon GO data.
+Phase 3A adds a macOS-only diagnostic app for user-selected iPhone Mirroring window capture. Dale manually verified changing, usable Pokémon GO frames from Apple's iPhone Mirroring app. There is no production scanner, recognition/OCR, production data provider, species/meta ranking, battle/raid simulation, complete recommendation engine, sync, or mobile app. Synthetic fixture values are not live Pokémon GO data.
 
 ## Architecture at a glance
 
@@ -14,6 +14,7 @@ There is still **no** UI, scanner, screen capture, production data provider, spe
 - `GOCompanionApplication` owns repository ports plus collection and backup use cases; SQLite implements those ports.
 - Future macOS and iOS apps use native SwiftUI shells.
 - Phase 3 macOS capture uses a ScreenCaptureKit adapter for a user-selected iPhone Mirroring window, with user-selected region capture as fallback. It is observation-only.
+- The Phase 3A diagnostic app exercises selected-window capture; see [manual verification](docs/SCANNING.md#phase-3a-iphone-mirroring-capture-diagnostic).
 - User facts, normalized game knowledge, and disposable derived caches live in separate SQLite files.
 - Providers and future sync backends are ports/adapters, not domain dependencies.
 
@@ -52,6 +53,9 @@ Sources/
   GOCompanionApplication/  collection repository ports and lifecycle/backup use cases
   GOCompanionKnowledge/    canonical knowledge, providers, update pipeline and calculation engines
   GOCompanionPersistence/  collection plus three-layer SQLite adapters and forward migrations
+  GOCompanionCapture/      platform-neutral capture diagnostic contracts (macOS target)
+  MacCaptureAdapter/       ScreenCaptureKit selected-window adapter (macOS only)
+  CaptureDiagnostic/       minimal macOS capture test harness
   CSQLite/                 minimal system-library bridge
 Tests/GOCompanionTests/    domain, migration, cache-key tests and fake fixtures
 docs/                      product and engineering source of truth

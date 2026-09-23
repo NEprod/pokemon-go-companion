@@ -42,6 +42,34 @@ Critical confidence is field-specific. Cross-field validation can reduce confide
 
 Recognition is local/on-device where practical. Real collection screenshots, OCR crops, names, and catch locations are private and excluded from logs/source control. Regression fixtures are synthetic or anonymized unless the user explicitly approves otherwise. Any future cloud recognition feature is opt-in, explains exactly what leaves the device and retention, and is not required for core scanning.
 
+## Phase 3A: iPhone Mirroring capture diagnostic
+
+Phase 3A adds `GOCompanionCapture` contracts, a macOS-only `MacCaptureAdapter`, and a small SwiftUI diagnostic executable. The core capture types contain no ScreenCaptureKit types. `SCShareableContent` enumerates visible shareable windows. The operator selects one window by its session-lifetime `windowID`; the adapter resolves that ID again before starting and uses `SCContentFilter(desktopIndependentWindow:)`. A likely iPhone Mirroring badge uses the installed app's `com.apple.ScreenContinuity` bundle ID first, then application and title hints. A badge is never a substitute for manual selection.
+
+The stream requests BGRA video only, at up to 5 frames per second, a maximum output dimension of 1,280 pixels, queue depth 3, and no audio or cursor. It counts only valid, complete sample buffers with a nonzero pixel buffer and finite timestamp. The diagnostic reports state, selected application/window, complete-frame count, pixel dimensions, stream presentation time, local receipt time, and capture errors. The operator may explicitly save one PNG frame with the Save button; frames are otherwise kept only in memory. Do not commit a saved frame or share it casually.
+
+**Phase 3A status: VERIFIED WORKING.** On Dale's Mac, Screen Recording permission was granted, the iPhone Mirroring window was discovered and suggested, and Dale selected it. ScreenCaptureKit captured changing Pokémon GO frames at 580 × 1280 pixels with advancing frame count and timestamps. A user-saved frame was inspected and contained clear, usable Pokémon GO pixels rather than blank or protected content. No captured image is stored in this repository.
+
+Build a stable local app bundle from the project root:
+
+```sh
+sh scripts/build-capture-diagnostic-app.sh
+open .build/Phase3ACaptureDiagnostic.app
+```
+
+The script signs the local bundle ad hoc. macOS Screen Recording permission is tied to the app identity: use this bundle for the manual test rather than launching the executable through a terminal. If permission is missing, use the app's Request button, enable **GO Capture Diagnostic** in System Settings → Privacy & Security → Screen & System Audio Recording, quit the app, and reopen it. If a rebuilt bundle does not inherit permission, check the system permission entry again.
+
+Manual verification on Dale's Mac:
+
+1. Open Apple's iPhone Mirroring app and display Pokémon GO on the iPhone.
+2. Launch the diagnostic app and grant Screen Recording permission if prompted; restart it if macOS requires that.
+3. Refresh shareable windows. Locate iPhone Mirroring by application/bundle hint or choose the correct window manually.
+4. Select the window and start capture. Confirm the state says `capturing`, the frame count increases, and the size is nonzero.
+5. Navigate manually within Pokémon GO. Confirm the count and latest timestamp continue to advance. Optionally save one frame and inspect it locally to confirm the pixels show the mirrored window rather than black/blank content.
+6. Stop capture and confirm the state becomes `stopped` and the count no longer advances.
+
+Window IDs may change when iPhone Mirroring restarts; refresh and reselect. A window absent from ScreenCaptureKit's shareable list or protected/blank output needs a real-device finding. Compilation and automated tests cannot establish compatibility with iPhone Mirroring. The broader Phase 3 scanner criteria below remain future work.
+
 ## Phase 3 proof criteria
 
 Prove permission/window selection, Mirroring-window frame delivery, fallback region selection, no input/control path, basic screen classification/species/CP/appraisal recognition, per-field confidence, and deterministic fixture regression tests. Do not call the scanner production-ready based on a handful of screenshots.

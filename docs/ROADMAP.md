@@ -20,6 +20,8 @@ Implemented provider update pipeline and raw SQLite source cache; validation/sta
 
 Native SwiftUI macOS shell; Screen Recording permission and explicit iPhone Mirroring window chooser using ScreenCaptureKit; manual region fallback; frame throttling; Vision/OCR screen classifier and recognition for species/CP/detail/appraisal/IVs; field confidence and anonymized regression fixtures. No interaction/control.
 
+Phase 3A capture feasibility is **VERIFIED WORKING** on Dale's Mac with Apple's iPhone Mirroring and Pokémon GO. Selected-window capture delivered changing 580 × 1280 frames, and an explicitly saved frame had clear, usable pixels. Region fallback, recognition, OCR, observations, and the broader scanner remain planned.
+
 ## Phase 4 — live scan workflow (**planned**)
 
 Progressive prompts and multi-screen session aggregation; moves/forms/Shadow/Shiny/Lucky/costume/buddy/Max/G-Max/tags; reconciliation; live recommendation card; uncertain scans to Review.
