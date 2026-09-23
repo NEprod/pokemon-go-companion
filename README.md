@@ -4,9 +4,9 @@ GO Account Companion is a private, local-first Pokémon GO account intelligence 
 
 ## Current status
 
-Phase 1 provides the Core Collection Engine: stable specimen UUIDs, transactional create/update/query/archive/restore workflows, immutable history, persisted observations with field-level confidence/provenance, internal tags, roles, recommended GO-tag state, and versioned JSON backup/full restore. Phase 0's three-database and provider-contract foundation remains intact.
+Phase 1 provides the Core Collection Engine: stable specimen UUIDs, transactional create/update/query/archive/restore workflows, immutable history, persisted observations with field-level confidence/provenance, internal tags, roles, recommended GO-tag state, and versioned JSON backup/full restore. Phase 2 adds a versioned raw/normalized/derived knowledge cache, atomic previous-good activation/rollback, deterministic CP/HP/reverse-level calculations, and cached 4,096-spread PvP IV rankings over frozen synthetic fixtures.
 
-There is still **no** UI, scanner, screen capture, production provider integration, PvP/raid calculation, complete recommendation engine, sync, or mobile app.
+There is still **no** UI, scanner, screen capture, production data provider, species/meta ranking, battle/raid simulation, complete recommendation engine, sync, or mobile app. Synthetic fixture values are not live Pokémon GO data.
 
 ## Architecture at a glance
 
@@ -26,7 +26,7 @@ See [Architecture](docs/ARCHITECTURE.md) and [ADR 0001](docs/ADR/0001-native-swi
 - SQLite development headers/library (included with macOS; `libsqlite3-dev` on Linux)
 - VS Code plus the recommended Swift extension, or Xcode
 
-No credentials or network access are required through Phase 1.
+No credentials or network access are required through Phase 2.
 
 ## Build and test
 
@@ -50,8 +50,8 @@ GitHub Actions runs format lint, build, and tests on macOS. Opening the folder i
 Sources/
   GOCompanionDomain/       typed user facts, observations, preferences, plans, recommendations
   GOCompanionApplication/  collection repository ports and lifecycle/backup use cases
-  GOCompanionKnowledge/    replaceable provider and three-layer cache contracts
-  GOCompanionPersistence/  SQLite adapter and forward migration runner
+  GOCompanionKnowledge/    canonical knowledge, providers, update pipeline and calculation engines
+  GOCompanionPersistence/  collection plus three-layer SQLite adapters and forward migrations
   CSQLite/                 minimal system-library bridge
 Tests/GOCompanionTests/    domain, migration, cache-key tests and fake fixtures
 docs/                      product and engineering source of truth
@@ -72,4 +72,4 @@ Migrations are immutable after application. New schema work receives a new numbe
 4. Run the three commands above.
 5. Review the diff, commit, and push to a private GitHub repository.
 
-The JSON format and safe empty-database restore boundary are documented in [Backup Format](docs/BACKUP_FORMAT.md). The roadmap deliberately separates this collection engine from Phase 2 game knowledge; see [Roadmap](docs/ROADMAP.md).
+The JSON format and safe empty-database restore boundary are documented in [Backup Format](docs/BACKUP_FORMAT.md). Knowledge source approval and cache behavior are documented in [Data Sources](docs/DATA_SOURCES.md), and phase boundaries remain authoritative in [Roadmap](docs/ROADMAP.md).

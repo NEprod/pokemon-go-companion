@@ -6,15 +6,15 @@ Status labels: **done foundation**, **next**, **planned**. A phase is complete o
 
 Technology evaluation/ADRs; repository and VS Code/Git/CI setup; durable product/docs; shared domain types; three-database schema and explicit migrations; provider/source/normalized/derived cache contracts; fake fixture coverage; initial tests and formatting. There is intentionally no product UI or later-phase behavior.
 
-## Phase 1 — core collection engine (**implemented; review pending**)
+## Phase 1 — core collection engine (**done**)
 
 Implemented repository/application use cases for Pokémon UUID records, accepted observations, transactional immutable history, manual create/edit, active/archive restoration, Transfer/Trade confirmation foundations, multiple roles, internal/recommended GO-tag persistence, safe versioned JSON export and empty-database restore, filters/pagination, optimistic revisions, and rollback/migration/safety tests.
 
 CSV export, merge import, sophisticated reconciliation/duplicate matching, inventory/build-plan services, and production recommendation rules remain later work. They are not represented as complete.
 
-## Phase 2 — game knowledge/cache (**planned**)
+## Phase 2 — game knowledge/cache (**implemented; review pending**)
 
-Provider update coordinator and file source cache; validation/staging/activation/rollback; canonical species/forms/stats/types/moves/evolutions/CP multipliers/costs; deterministic CP and 4,096-combination PvP IV calculations; versioned derived cache; licensed frozen provider fixtures and invalidation/fallback tests. Resolve source/license questions first.
+Implemented provider update pipeline and raw SQLite source cache; validation/staging/activation/rollback; canonical species/forms/stats/types/moves/evolutions/CP multipliers/costs; deterministic CP/HP/reverse-level and 4,096-combination PvP IV calculations; versioned derived cache; synthetic frozen fixtures; and invalidation/fallback tests. No production source passed the current license/provenance review, so there is deliberately no live provider. Species/meta ranking, battle simulation, raids and event-aware move acquisition remain later work.
 
 ## Phase 3 — macOS scanner proof of concept (**planned**)
 

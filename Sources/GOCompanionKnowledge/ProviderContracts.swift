@@ -41,6 +41,11 @@ public struct ProviderVersion: Codable, Hashable, Sendable {
 public struct FreshnessPolicy: Codable, Hashable, Sendable {
     public let maximumAge: TimeInterval
     public let lightweightCheckInterval: TimeInterval
+
+    public init(maximumAge: TimeInterval, lightweightCheckInterval: TimeInterval) {
+        self.maximumAge = maximumAge
+        self.lightweightCheckInterval = lightweightCheckInterval
+    }
 }
 
 public enum UpdateStatus: String, Codable, Sendable {
@@ -59,10 +64,12 @@ public struct ProviderState: Codable, Hashable, Sendable {
 public struct ProviderPayload: Sendable {
     public let bytes: Data
     public let version: ProviderVersion
+    public let etag: String?
 
-    public init(bytes: Data, version: ProviderVersion) {
+    public init(bytes: Data, version: ProviderVersion, etag: String? = nil) {
         self.bytes = bytes
         self.version = version
+        self.etag = etag
     }
 }
 

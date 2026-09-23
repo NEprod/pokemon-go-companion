@@ -42,13 +42,40 @@ Important indexes: profile/status; profile/species/form; non-null fingerprint; i
 
 ### Knowledge database
 
-Provider versions and source-cache metadata establish active/previous source provenance. Versioned `species_forms`, `moves`, move-availability rules, `events`, and structured opportunities are representative—not the final complete Phase 2 schema. Stable canonical IDs plus `source_version` allow staged activation and rollback.
+Migration 001's provider/source and representative reference tables remain immutable. Phase 2 migration 002 adds `source_payloads` for raw bytes plus provider/category/source/parser/ETag/checksum/fetch/validation/lifecycle provenance. `knowledge_datasets` stores an immutable encoded canonical snapshot and activation metadata; `knowledge_active_versions` atomically points to active and previous-good normalized versions.
+
+Version-scoped relational projections cover types, species/forms, evolutions, moves, move pools and CP multipliers/costs. `SpeciesFormID(speciesID, formID)` is the stable canonical key. Forms include display name, one or two types, positive base Attack/Defence/Stamina, evolution family, and Shadow/Mega/Dynamax/Gigantamax capabilities. Evolutions reference canonical endpoints and carry candy cost plus structured requirements. Moves include Fast/Charged kind, type, PvE power/energy/duration, PvP power/energy/turns and buff/debuff fields. Pool rows carry current/legacy/event-exclusive/Elite-only structure.
+
+Activation validates uniqueness, IDs, types, stats, multiplier/cost ranges, move energy semantics, and move/evolution references before staging. It verifies relational row counts before switching pointers in the same transaction. Invalid candidate bytes may be retained for diagnostics but can never become active.
 
 Indexes prioritize active category versions, move acquisition lookup by species/form/move/time, and opportunity queries. Form distinctions with gameplay meaning receive distinct canonical IDs; display localization is separate later.
 
 ### Derived database
 
-`derived_entries` is keyed by cache kind, subject/configuration, canonical input-version map, and engine version. `invalidation_log` explains version transitions. PvP keys must include species/form, league/cup cap and eligibility rules, level-cap/Best Buddy rules, game-data version, and calculation engine. Raid/team keys additionally include exact collection configuration and battle assumptions.
+`derived_entries` is keyed by cache kind, subject/configuration, canonical input-version map, and engine version. `invalidation_log` explains version transitions; `pvp_iv_cache_metadata` makes PvP knowledge/engine provenance directly inspectable. PvP subjects include species/form, league/cup ID and CP cap, level cap, XL and Best Buddy rules. Raid/team keys later additionally include exact collection configuration and battle assumptions.
+
+## Phase 2 calculation models
+
+`PokemonLevel` stores integer half-steps, preventing floating-point identity ambiguity. Only levels supplied by the active multiplier table are calculable. IV values are independently constrained to 0–15.
+
+For multiplier `M`, the engine uses:
+
+```text
+Attack  = (baseAttack  + attackIV)  × M
+Defence = (baseDefence + defenceIV) × M
+Stamina = (baseStamina + staminaIV) × M
+HP      = max(10, floor(Stamina))
+CP      = max(10, floor((baseAttack + attackIV)
+                        × sqrt(baseDefence + defenceIV)
+                        × sqrt(baseStamina + staminaIV)
+                        × M² / 10))
+```
+
+Reverse resolution evaluates every supported level and returns every CP match; ambiguity is a result, never guessed away.
+
+PvP ranking enumerates 16³ spreads, chooses each spread's highest permitted level at or below the configured cap, and orders `Attack × Defence × integer HP` descending. It reports CP, level, battle Attack/Defence, HP, stat product, percentage of rank one, ordinal IV rank, XL and Best Buddy metadata. Uncapped Master-style and arbitrary capped configurations use the same path.
+
+Exact tie order is: stat product descending; Attack descending; Defence descending; HP descending; lower level first; attack IV ascending; defence IV descending; stamina IV descending. This yields a stable ordinal 1…4096. It is an implementation contract, not a species/meta ranking.
 
 ## Migration policy
 
@@ -56,7 +83,7 @@ Each database owns an ordered catalog and `schema_migrations(version, name, chec
 
 Before any destructive rewrite, implement and test backup/export, space checks, failure rollback, and restoration. CI tests fresh migration, idempotence, and mutation detection now; later it must test supported-version upgrade paths with sanitized fixtures.
 
-Migration 002 adds optimistic `revision`, observation ownership/provenance, structured history metadata, internal tags, roles, recommended GO tags, status validation, and database triggers that reject history update/delete. It does not rewrite migration 001.
+User migration 002 adds optimistic `revision`, observation ownership/provenance, structured history metadata, internal tags, roles, recommended GO tags, status validation, and database triggers that reject history update/delete. Knowledge migration 002 adds the raw/normalized/versioned knowledge cache; derived migration 002 adds PvP cache provenance. None rewrite migration 001.
 
 ## Identity, conflict, and deletion rules
 
