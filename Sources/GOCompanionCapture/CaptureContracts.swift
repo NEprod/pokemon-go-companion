@@ -62,6 +62,27 @@ public struct CapturedFrameMetadata: Equatable, Sendable {
     }
 }
 
+/// Small, platform-neutral RGB image payload for on-device analysis.
+/// Pixels are packed RGB (three bytes per pixel), row-major, and capped by capture adapters.
+public struct CapturedImageFrame: Equatable, Sendable {
+    public let width: Int
+    public let height: Int
+    public let rgbPixels: Data
+    public let frameID: UInt64
+    public let timestamp: Date
+
+    public init?(width: Int, height: Int, rgbPixels: Data, frameID: UInt64, timestamp: Date) {
+        guard width > 0, height > 0, width <= 512, height <= 512,
+            rgbPixels.count == width * height * 3
+        else { return nil }
+        self.width = width
+        self.height = height
+        self.rgbPixels = rgbPixels
+        self.frameID = frameID
+        self.timestamp = timestamp
+    }
+}
+
 public struct CaptureDiagnostics: Sendable {
     public private(set) var state: CaptureSessionState = .idle
     public private(set) var selectedWindow: CaptureWindow?
@@ -120,6 +141,7 @@ public enum CaptureError: Error, Equatable, CustomStringConvertible, Sendable {
 
 public enum CaptureEvent: Sendable {
     case frame(CapturedFrameMetadata)
+    case imageFrame(CapturedImageFrame)
     case stoppedWithError(String)
 }
 

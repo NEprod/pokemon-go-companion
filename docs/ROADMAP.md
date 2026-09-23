@@ -16,11 +16,15 @@ CSV export, merge import, sophisticated reconciliation/duplicate matching, inven
 
 Implemented provider update pipeline and raw SQLite source cache; validation/staging/activation/rollback; canonical species/forms/stats/types/moves/evolutions/CP multipliers/costs; deterministic CP/HP/reverse-level and 4,096-combination PvP IV calculations; versioned derived cache; synthetic frozen fixtures; and invalidation/fallback tests. No production source passed the current license/provenance review, so there is deliberately no live provider. Species/meta ranking, battle simulation, raids and event-aware move acquisition remain later work.
 
-## Phase 3 — macOS scanner proof of concept (**planned**)
+## Phase 3 — macOS scanner proof of concept (**in progress**)
 
-Native SwiftUI macOS shell; Screen Recording permission and explicit iPhone Mirroring window chooser using ScreenCaptureKit; manual region fallback; frame throttling; Vision/OCR screen classifier and recognition for species/CP/detail/appraisal/IVs; field confidence and anonymized regression fixtures. No interaction/control.
+Broader planned scope: native macOS diagnostics, selected-window capture, frame throttling, local screen classification, then screen-specific field recognition/confidence and anonymized regression fixtures. Region fallback and Vision/OCR extraction remain future work. No interaction/control.
 
 Phase 3A capture feasibility is **VERIFIED WORKING** on Dale's Mac with Apple's iPhone Mirroring and Pokémon GO. Selected-window capture delivered changing 580 × 1280 frames, and an explicitly saved frame had clear, usable pixels. Region fallback, recognition, OCR, observations, and the broader scanner remain planned.
+
+Phase 3B screen classification and bounded temporal continuity are **complete — VERIFIED WORKING** through Dale's final live test. Supported families are Map, Main Menu, Nearby, Storage, Detail, Appraisal, Items, Profile, and `unknown`, with conservative raw evidence and a separate stable result. Moves, Max, Adventure Effects, and form panels remain Detail content, not top-level screens. Optional private screenshot/RGB regressions are not required to build or test a clean checkout. No Pokémon, item, or profile field extraction is included.
+
+Next planned stage: Phase 3C Pokémon Detail/Appraisal extraction behind the screen-analysis boundary. Not implemented; Phase 4 has not started.
 
 ## Phase 4 — live scan workflow (**planned**)
 

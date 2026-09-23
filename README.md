@@ -6,7 +6,7 @@ GO Account Companion is a private, local-first Pokémon GO account intelligence 
 
 Phase 1 provides the Core Collection Engine: stable specimen UUIDs, transactional create/update/query/archive/restore workflows, immutable history, persisted observations with field-level confidence/provenance, internal tags, roles, recommended GO-tag state, and versioned JSON backup/full restore. Phase 2 adds a versioned raw/normalized/derived knowledge cache, atomic previous-good activation/rollback, deterministic CP/HP/reverse-level calculations, and cached 4,096-spread PvP IV rankings over frozen synthetic fixtures.
 
-Phase 3A adds a macOS-only diagnostic app for user-selected iPhone Mirroring window capture. Dale manually verified changing, usable Pokémon GO frames from Apple's iPhone Mirroring app. There is no production scanner, recognition/OCR, production data provider, species/meta ranking, battle/raid simulation, complete recommendation engine, sync, or mobile app. Synthetic fixture values are not live Pokémon GO data.
+Phase 3A provides user-selected iPhone Mirroring window capture; Phase 3B adds deterministic screen-family classification and bounded temporal continuity. Both are complete and manually live validated by Dale in the macOS diagnostic. Private regression captures are optional local files, never required package resources. There is no field extraction/OCR, production scanner, production data provider, species/meta ranking, battle/raid simulation, complete recommendation engine, sync, or mobile app. Synthetic fixture values are not live Pokémon GO data.
 
 ## Architecture at a glance
 

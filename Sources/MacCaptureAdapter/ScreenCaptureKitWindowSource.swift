@@ -116,6 +116,7 @@ public final class ScreenCaptureKitWindowSource: CaptureSource {
 private final class FrameSink: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Sendable {
     private let lock = NSLock()
     private var latest: CVPixelBuffer?
+    private var nextFrameID: UInt64 = 0
     private let onEvent: @Sendable (CaptureEvent) -> Void
 
     init(onEvent: @escaping @Sendable (CaptureEvent) -> Void) {
@@ -145,8 +146,15 @@ private final class FrameSink: NSObject, SCStreamOutput, SCStreamDelegate, @unch
         guard metadata.widthPixels > 0, metadata.heightPixels > 0, timestamp.isFinite else { return }
         lock.lock()
         latest = buffer
+        nextFrameID &+= 1
+        let frameID = nextFrameID
         lock.unlock()
         onEvent(.frame(metadata))
+        if let analysisFrame = BGRAFrameConverter.analysisFrame(
+            from: buffer, frameID: frameID, timestamp: metadata.receivedAt)
+        {
+            onEvent(.imageFrame(analysisFrame))
+        }
     }
 
     func stream(_ stream: SCStream, didStopWithError error: any Error) {
