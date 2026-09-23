@@ -1,0 +1,101 @@
+{
+  "normalizedVersion": "synthetic-normalized-v1",
+  "types": ["grass", "ice", "normal", "poison", "water"],
+  "speciesForms": [
+    {
+      "id": {"speciesID": "seedling", "formID": "normal"},
+      "displayName": "Seedling",
+      "types": ["grass"],
+      "baseStats": {"attack": 118, "defense": 111, "stamina": 128},
+      "evolutionFamilyID": "seedling-family",
+      "capabilities": {"shadow": true, "mega": false, "dynamax": true, "gigantamax": false}
+    },
+    {
+      "id": {"speciesID": "bloom", "formID": "normal"},
+      "displayName": "Bloom",
+      "types": ["grass", "poison"],
+      "baseStats": {"attack": 198, "defense": 189, "stamina": 190},
+      "evolutionFamilyID": "seedling-family",
+      "capabilities": {"shadow": false, "mega": true, "dynamax": false, "gigantamax": false}
+    },
+    {
+      "id": {"speciesID": "shellmon", "formID": "coastal"},
+      "displayName": "Shellmon Coastal",
+      "types": ["water"],
+      "baseStats": {"attack": 200, "defense": 205, "stamina": 210},
+      "evolutionFamilyID": "shellmon-family",
+      "capabilities": {"shadow": false, "mega": false, "dynamax": false, "gigantamax": false}
+    },
+    {
+      "id": {"speciesID": "shellmon", "formID": "tundra"},
+      "displayName": "Shellmon Tundra",
+      "types": ["water", "ice"],
+      "baseStats": {"attack": 210, "defense": 195, "stamina": 210},
+      "evolutionFamilyID": "shellmon-family",
+      "capabilities": {"shadow": false, "mega": false, "dynamax": false, "gigantamax": false}
+    },
+    {
+      "id": {"speciesID": "titan", "formID": "normal"},
+      "displayName": "Titan",
+      "types": ["normal"],
+      "baseStats": {"attack": 600, "defense": 600, "stamina": 600},
+      "evolutionFamilyID": "titan-family",
+      "capabilities": {"shadow": false, "mega": false, "dynamax": true, "gigantamax": true}
+    },
+    {
+      "id": {"speciesID": "tiny", "formID": "normal"},
+      "displayName": "Tiny",
+      "types": ["normal"],
+      "baseStats": {"attack": 1, "defense": 1, "stamina": 1},
+      "evolutionFamilyID": "tiny-family",
+      "capabilities": {"shadow": false, "mega": false, "dynamax": false, "gigantamax": false}
+    }
+  ],
+  "evolutions": [
+    {
+      "from": {"speciesID": "seedling", "formID": "normal"},
+      "to": {"speciesID": "bloom", "formID": "normal"},
+      "candyCost": 25,
+      "requirements": ["daytime"]
+    }
+  ],
+  "moves": [
+    {
+      "moveID": "leaf_tap",
+      "displayName": "Leaf Tap",
+      "kind": "fast",
+      "typeID": "grass",
+      "pve": {"power": 8, "durationMilliseconds": 600, "energyDelta": 7},
+      "pvp": {"power": 5, "energyDelta": 8, "turns": 2, "attackStages": 0, "defenseStages": 0, "buffChance": 0}
+    },
+    {
+      "moveID": "bloom_burst",
+      "displayName": "Bloom Burst",
+      "kind": "charged",
+      "typeID": "grass",
+      "pve": {"power": 100, "durationMilliseconds": 2400, "energyDelta": -50},
+      "pvp": {"power": 90, "energyDelta": -50, "turns": 1, "buffTarget": "self", "attackStages": 1, "defenseStages": 0, "buffChance": 0.1}
+    },
+    {
+      "moveID": "neutral_strike",
+      "displayName": "Neutral Strike",
+      "kind": "charged",
+      "typeID": "normal",
+      "pve": {"power": 70, "durationMilliseconds": 2000, "energyDelta": -50},
+      "pvp": {"power": 70, "energyDelta": -45, "turns": 1, "attackStages": 0, "defenseStages": 0, "buffChance": 0}
+    }
+  ],
+  "movePools": [
+    {"speciesForm": {"speciesID": "seedling", "formID": "normal"}, "moveID": "leaf_tap", "availability": "current"},
+    {"speciesForm": {"speciesID": "seedling", "formID": "normal"}, "moveID": "bloom_burst", "availability": "eventExclusive"},
+    {"speciesForm": {"speciesID": "bloom", "formID": "normal"}, "moveID": "bloom_burst", "availability": "legacy"},
+    {"speciesForm": {"speciesID": "titan", "formID": "normal"}, "moveID": "neutral_strike", "availability": "current"}
+  ],
+  "cpMultipliers": [
+    {"level": {"halfSteps": 2}, "multiplier": 0.1, "stardustCost": 200, "candyCost": 1, "xlCandyCost": 0, "requiresXL": false, "bestBuddyOnly": false},
+    {"level": {"halfSteps": 3}, "multiplier": 0.2, "stardustCost": 400, "candyCost": 1, "xlCandyCost": 0, "requiresXL": false, "bestBuddyOnly": false},
+    {"level": {"halfSteps": 4}, "multiplier": 0.3, "stardustCost": 600, "candyCost": 2, "xlCandyCost": 0, "requiresXL": false, "bestBuddyOnly": false},
+    {"level": {"halfSteps": 5}, "multiplier": 0.4, "stardustCost": 800, "candyCost": 2, "xlCandyCost": 1, "requiresXL": true, "bestBuddyOnly": false},
+    {"level": {"halfSteps": 6}, "multiplier": 0.5, "stardustCost": 1000, "candyCost": 3, "xlCandyCost": 2, "requiresXL": true, "bestBuddyOnly": true}
+  ]
+}

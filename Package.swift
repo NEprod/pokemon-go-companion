@@ -26,7 +26,9 @@ let package = Package(
         ),
         .target(
             name: "GOCompanionPersistence",
-            dependencies: ["GOCompanionDomain", "GOCompanionApplication", "CSQLite"],
+            dependencies: [
+                "GOCompanionDomain", "GOCompanionApplication", "GOCompanionKnowledge", "CSQLite",
+            ],
             resources: [.process("Migrations")]
         ),
         .testTarget(

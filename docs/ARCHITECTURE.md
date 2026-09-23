@@ -52,7 +52,7 @@ UI never queries SQLite directly. Domain never imports SwiftUI, ScreenCaptureKit
 
 ## Current modules and planned growth
 
-Current package targets are `GOCompanionDomain`, `GOCompanionApplication`, `GOCompanionKnowledge`, `GOCompanionPersistence`, and `CSQLite`. Application owns collection repository contracts and use cases; persistence depends inward and implements those ports. Later targets should add `GOCompanionRecognition`, `GOCompanionRecommendation`, `MacCaptureAdapter`, `MacApp`, and `iOSApp` only when their phase begins. App targets are composition roots for dependency injection.
+Current package targets are `GOCompanionDomain`, `GOCompanionApplication`, `GOCompanionKnowledge`, `GOCompanionPersistence`, and `CSQLite`. Application owns collection repository contracts and use cases. Knowledge owns provider/cache ports, canonical reference models, validation and deterministic calculation services. Persistence depends inward and implements both collection and knowledge/cache ports. Later targets should add `GOCompanionRecognition`, `GOCompanionRecommendation`, `MacCaptureAdapter`, `MacApp`, and `iOSApp` only when their phase begins. App targets are composition roots for dependency injection.
 
 Prefer actors/structured concurrency at I/O boundaries, small value types, protocols owned by the consumer, and explicit error states. Avoid global containers and giant services. External JSON is decoded to provider DTOs, validated, then mapped to canonical models in a transaction.
 
@@ -76,3 +76,11 @@ A scan session receives frames from the chosen adapter, classifies screen type, 
 The code now provides collection repository/application boundaries, a transactional SQLite implementation, optimistic record revisions, lifecycle/history/observation/tag/role persistence, paginated filters, and versioned JSON export/full restore. Database triggers make collection history append-only, and rollback is tested.
 
 The recommended-tag data structure and “mark recommended” lifecycle are foundations, not a production recommendation engine. No UI, screen capture, OCR, game-data provider, PvP/raid calculation, cloud sync, or gameplay interaction exists.
+
+## Phase 2 implementation truth
+
+The knowledge layer now provides canonical species/forms, stats/types, evolutions/costs, moves/pools, CP multipliers and capability flags. The SQLite adapter retains validated raw bytes and provenance, writes normalized staging rows, checks integrity, and switches active/previous-good pointers in one knowledge-database transaction. Fetch, source validation, normalization or activation failure leaves active data untouched. Explicit rollback also invalidates derived data.
+
+The derived database stores version-keyed PvP IV tables and invalidation audit entries. Keys include species/form, complete league/level/XL/Best Buddy rules, normalized knowledge version and engine version. It is safe to delete and regenerate; the user database never contains knowledge or derived tables.
+
+`CombatPowerEngine` implements deterministic CP/HP and reverse level resolution. `PvPIVRanker` enumerates all 4,096 IV spreads for an eligible species/form and league configuration. This is specimen IV ranking only: it is not a battle simulator, species/meta ranking, recommendation engine, raid engine or live provider integration. Phase 2 uses synthetic data because no reviewed Game Master source passed the production-source gate.

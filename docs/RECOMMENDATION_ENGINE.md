@@ -21,6 +21,8 @@ Every card answers:
 
 Show species/meta rank separately from specimen IV rank. Show different best moves for PvP, raid, and Max roles. Scores/readiness dimensions need named inputs and gaps; no mystery composite scores.
 
+Phase 2's `PvPIVRanker` supplies only specimen IV rank. It enumerates every 0–15 IV spread against a versioned species/form, multiplier table, CP cap and level/XL/Best Buddy rules. Its stat product is battle Attack × battle Defence × integer HP. Exact ties resolve by Attack, Defence, HP, lower level, then attack-IV ascending/defence-IV descending/stamina-IV descending. Recommendation code must never label this ordering a species/meta rank or infer matchup quality from it.
+
 ## Rule architecture
 
 Small rules declare required facts/knowledge, goal relevance, evidence, candidate actions/tags, and safety level. An orchestrator evaluates applicable rules over an immutable snapshot. A policy layer resolves competing roles and resource constraints. An explanation composer formats structured reason codes; UI only presents output.

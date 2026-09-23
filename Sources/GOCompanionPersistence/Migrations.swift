@@ -36,8 +36,8 @@ public enum MigrationCatalog {
         let names: [String]
         switch kind {
         case .user: names = ["001_user_initial", "002_user_collection_engine"]
-        case .knowledge: names = ["001_knowledge_initial"]
-        case .derived: names = ["001_derived_initial"]
+        case .knowledge: names = ["001_knowledge_initial", "002_knowledge_cache"]
+        case .derived: names = ["001_derived_initial", "002_pvp_iv_cache"]
         }
         return try names.enumerated().map { index, name in
             guard let url = bundle.url(forResource: name, withExtension: "sql") else {

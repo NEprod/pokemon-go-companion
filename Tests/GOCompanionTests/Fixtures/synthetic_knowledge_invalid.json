@@ -1,0 +1,20 @@
+{
+  "normalizedVersion": "synthetic-invalid",
+  "types": ["grass"],
+  "speciesForms": [
+    {
+      "id": {"speciesID": "broken", "formID": "normal"},
+      "displayName": "Broken",
+      "types": ["unknown-type"],
+      "baseStats": {"attack": 0, "defense": 1, "stamina": 1},
+      "evolutionFamilyID": "broken-family",
+      "capabilities": {"shadow": false, "mega": false, "dynamax": false, "gigantamax": false}
+    }
+  ],
+  "evolutions": [],
+  "moves": [],
+  "movePools": [],
+  "cpMultipliers": [
+    {"level": {"halfSteps": 2}, "multiplier": 1.1, "stardustCost": 0, "candyCost": 0, "xlCandyCost": 0, "requiresXL": false, "bestBuddyOnly": false}
+  ]
+}
