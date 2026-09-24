@@ -27,6 +27,15 @@ import Testing
         }
     }
     let frame = try #require(BGRAFrameConverter.analysisFrame(from: buffer, frameID: 11, timestamp: .distantPast))
+    let observation = try #require(
+        BGRAFrameConverter.observationFrame(
+            from: buffer, frameID: 11, timestamp: .distantPast, sourceWindowID: 77,
+            sourceWindowWidthPoints: 22.5, sourceWindowHeightPoints: 48.5))
+    #expect(observation.width == width && observation.height == height)
+    #expect(observation.sourceWindowID == 77 && observation.frameID == 11)
+    #expect(observation.sourceWindowWidthPoints == 22.5)
+    #expect(observation.sourceWindowHeightPoints == 48.5)
+    #expect(observation.rgbPixels == frame.rgbPixels)
     #expect(frame.width == width && frame.height == height)
     let rgb = [UInt8](frame.rgbPixels)
     for (x, y) in [(0, 0), (13, 29), (36, 80)] {

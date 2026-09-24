@@ -205,7 +205,8 @@ private struct FrameFeatures {
                     .atLeast("warm-overlay", lower.warm, 0.30, "Warm appraisal overlay covers the lower detail card."),
                     .atMost("covered-card", lower.white, 0.50, "The lower white detail card is covered by an overlay."),
                     .atLeast(
-                        "detail-background", hero.saturated, 0.35, "A Pokémon detail hero remains behind the overlay."),
+                        "overlay-card-boundary", center.white - lower.white, 0.12,
+                        "The visible white Detail card contrasts with the warm overlay below it."),
                     .atLeast(
                         "detail-card", center.white, 0.30,
                         "Part of the white detail card remains visible behind the overlay."),

@@ -92,6 +92,8 @@ Event records become structured opportunities (exclusive move, Frustration remov
 
 Collection filters eventually cover identity, CP/level/IV, traits/forms, moves/legacy, roles/tags, confidence, recency, queues, and expressions such as `GL rank < 100`, `needsTM & raid`, `mega & ready`, or `duplicate > 3`. Normal filtering never needs an LLM. Species pages show evolution, moves, role viability, target PvP IVs, rankings, owned specimens, best owned roles, and missing builds/forms.
 
+Pokédex goals concern **registration completion, not maintaining a living dex**. Being the only currently owned specimen is not by itself a Keep reason. A missing reachable evolution registration may support Keep/Evolve, whereas an already registered family gains no Pokédex Keep reason solely from current ownership. A future Pokédex account-state scanner can establish registrations; until then, recommendation tests may inject known registration state. Deliberate Lock/Keep and later Update by Scan must preserve a permanent specimen UUID across safely established progression, never matching permanently by species + IV alone. Temporary Phase 3C scan UUIDs do not confer ownership or trigger collection writes.
+
 ## Knowledge/update requirements
 
 The versioned offline cache must cover species/forms/stats/types/evolution, CP multipliers and cost rules, moves/pools/acquisition, Shadow/Purified, Mega, Dynamax/Gigantamax, leagues/cups/rankings, PvP/raid mechanics, current raids/events, items/resources, and availability where legally obtainable. Values are never scattered as code constants.

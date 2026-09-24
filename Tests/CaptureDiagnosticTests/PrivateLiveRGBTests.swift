@@ -1,5 +1,6 @@
 import Foundation
 import GOCompanionCapture
+import GOCompanionExtraction
 import GOCompanionScreenAnalysis
 import Testing
 
@@ -18,6 +19,7 @@ private let privateExpectations: [String: ScreenType] = [
     "FAIL-items-scrolled-unknown.json": .items,
     "FAIL-profile-top-unknown.json": .profile,
     "FAIL-profile-scrolled-unknown.json": .profile,
+    "FAIL-appraisal-fainted-mewtwo-unknown.json": .appraisal,
 ]
 
 private let ambiguousDetailArchive = "FAIL-detail-zamazenta-form-panel-unknown.json"
@@ -39,12 +41,14 @@ private let ambiguousDetailArchive = "FAIL-detail-zamazenta-form-panel-unknown.j
         let expected = try #require(privateExpectations[url.lastPathComponent])
         let saved = try JSONDecoder().decode(SavedClassifierFrame.self, from: Data(contentsOf: url))
         let frame = try #require(saved.archive.restoredFrame())
+        #expect(!PokemonJourneyVisualState(classifierFrame: frame).actionMenuVisible)
         let result = ScreenClassifier().classify(frame)
         let candidate = result.candidateAssessments.first { $0.screenType == expected }
         print(
             "PRIVATE REPLAY \(url.lastPathComponent): saved=\(saved.originalScreenType) "
                 + "result=\(result.screenType.rawValue) expected=\(expected.rawValue) "
                 + "candidate=\(candidate?.matchedSignals ?? 0)/\(candidate?.totalSignals ?? 0) "
+                + "supporting=\(candidate?.supportingSignals ?? []) "
                 + "missing=\(candidate?.missingSignals ?? [])")
         #expect(saved.originalScreenType == ScreenType.unknown.rawValue)
         #expect(saved.originalConfidence == 0.25)

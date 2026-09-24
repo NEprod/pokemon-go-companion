@@ -1,6 +1,7 @@
 import AppKit
 import Foundation
 import GOCompanionCapture
+import GOCompanionExtraction
 import GOCompanionScreenAnalysis
 import Testing
 
@@ -27,6 +28,7 @@ private let referenceCategories: [(folder: String, type: ScreenType)] = [
         for image in images {
             let frame = try #require(referenceFrame(at: image))
             let result = ScreenClassifier().classify(frame)
+            #expect(!PokemonJourneyVisualState(classifierFrame: frame).actionMenuVisible)
             #expect(
                 result.screenType == category.type,
                 "\(category.folder)/\(image.lastPathComponent): got \(result.screenType.rawValue) (\(result.confidence)); \(result.evidence.map(\.signal))"
@@ -87,6 +89,7 @@ private let referenceCategories: [(folder: String, type: ScreenType)] = [
         let frame = CapturedImageFrame(
             width: 58, height: 128, rgbPixels: Data(pixels), frameID: 17, timestamp: .distantPast)!
         let result = ScreenClassifier().classify(frame)
+        #expect(!PokemonJourneyVisualState(classifierFrame: frame).actionMenuVisible)
         #expect(result.screenType == .unknown)
         #expect(result.evidence.contains { $0.signal == "insufficient-structure" })
     }

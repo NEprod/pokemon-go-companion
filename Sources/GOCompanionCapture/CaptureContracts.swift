@@ -83,6 +83,46 @@ public struct CapturedImageFrame: Equatable, Sendable {
     }
 }
 
+/// Full-size RGB evidence for targeted extraction. Never persisted by the capture adapter.
+public struct CapturedObservationFrame: Sendable {
+    public let width: Int
+    public let height: Int
+    public let rgbPixels: Data
+    public let frameID: UInt64
+    public let timestamp: Date
+    public let sourceWindowID: UInt32?
+    /// Selected window bounds in macOS points, paired with the pixel-buffer dimensions above.
+    /// Nil for imported images that contain only game pixels.
+    public let sourceWindowWidthPoints: Double?
+    public let sourceWindowHeightPoints: Double?
+
+    public init?(
+        width: Int, height: Int, rgbPixels: Data, frameID: UInt64, timestamp: Date,
+        sourceWindowID: UInt32? = nil, sourceWindowWidthPoints: Double? = nil,
+        sourceWindowHeightPoints: Double? = nil
+    ) {
+        let validWindowSize: Bool
+        if let sourceWindowWidthPoints, let sourceWindowHeightPoints {
+            validWindowSize =
+                sourceWindowWidthPoints.isFinite && sourceWindowHeightPoints.isFinite
+                && sourceWindowWidthPoints > 0 && sourceWindowHeightPoints > 0
+        } else {
+            validWindowSize = sourceWindowWidthPoints == nil && sourceWindowHeightPoints == nil
+        }
+        guard width > 0, height > width, width <= 1_280, height <= 1_280,
+            rgbPixels.count == width * height * 3, validWindowSize
+        else { return nil }
+        self.width = width
+        self.height = height
+        self.rgbPixels = rgbPixels
+        self.frameID = frameID
+        self.timestamp = timestamp
+        self.sourceWindowID = sourceWindowID
+        self.sourceWindowWidthPoints = sourceWindowWidthPoints
+        self.sourceWindowHeightPoints = sourceWindowHeightPoints
+    }
+}
+
 public struct CaptureDiagnostics: Sendable {
     public private(set) var state: CaptureSessionState = .idle
     public private(set) var selectedWindow: CaptureWindow?
@@ -142,6 +182,7 @@ public enum CaptureError: Error, Equatable, CustomStringConvertible, Sendable {
 public enum CaptureEvent: Sendable {
     case frame(CapturedFrameMetadata)
     case imageFrame(CapturedImageFrame)
+    case observationFrame(CapturedObservationFrame)
     case stoppedWithError(String)
 }
 
