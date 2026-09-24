@@ -23,6 +23,10 @@ runtime/
 data/user/
 captures/
 screenshots/
+capture-classifier-frame-*.json
+capture-diagnostic*.png
+Tests/CaptureDiagnosticTests/Fixtures/ScreenReferences/
+GO-Capture-Failures/
 *.screenrecording
 *.xcresult/
 *.swp

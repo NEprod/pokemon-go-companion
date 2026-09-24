@@ -60,7 +60,9 @@ public final class ScreenCaptureKitWindowSource: CaptureSource {
         configuration.capturesAudio = false
         configuration.pixelFormat = kCVPixelFormatType_32BGRA
 
-        let frameSink = FrameSink(onEvent: onEvent)
+        let frameSink = FrameSink(
+            sourceWindowID: windowID, windowWidthPoints: Double(window.frame.width),
+            windowHeightPoints: Double(window.frame.height), onEvent: onEvent)
         let captureStream = SCStream(
             filter: SCContentFilter(desktopIndependentWindow: window),
             configuration: configuration,
@@ -116,9 +118,19 @@ public final class ScreenCaptureKitWindowSource: CaptureSource {
 private final class FrameSink: NSObject, SCStreamOutput, SCStreamDelegate, @unchecked Sendable {
     private let lock = NSLock()
     private var latest: CVPixelBuffer?
+    private var nextFrameID: UInt64 = 0
+    private let sourceWindowID: UInt32
+    private let windowWidthPoints: Double
+    private let windowHeightPoints: Double
     private let onEvent: @Sendable (CaptureEvent) -> Void
 
-    init(onEvent: @escaping @Sendable (CaptureEvent) -> Void) {
+    init(
+        sourceWindowID: UInt32, windowWidthPoints: Double, windowHeightPoints: Double,
+        onEvent: @escaping @Sendable (CaptureEvent) -> Void
+    ) {
+        self.sourceWindowID = sourceWindowID
+        self.windowWidthPoints = windowWidthPoints
+        self.windowHeightPoints = windowHeightPoints
         self.onEvent = onEvent
     }
 
@@ -145,8 +157,23 @@ private final class FrameSink: NSObject, SCStreamOutput, SCStreamDelegate, @unch
         guard metadata.widthPixels > 0, metadata.heightPixels > 0, timestamp.isFinite else { return }
         lock.lock()
         latest = buffer
+        nextFrameID &+= 1
+        let frameID = nextFrameID
         lock.unlock()
         onEvent(.frame(metadata))
+        if let analysisFrame = BGRAFrameConverter.analysisFrame(
+            from: buffer, frameID: frameID, timestamp: metadata.receivedAt)
+        {
+            onEvent(.imageFrame(analysisFrame))
+        }
+        // Full-size evidence is emitted at most once per second; classification remains at 5 Hz.
+        if frameID % 5 == 0,
+            let observationFrame = BGRAFrameConverter.observationFrame(
+                from: buffer, frameID: frameID, timestamp: metadata.receivedAt, sourceWindowID: sourceWindowID,
+                sourceWindowWidthPoints: windowWidthPoints, sourceWindowHeightPoints: windowHeightPoints)
+        {
+            onEvent(.observationFrame(observationFrame))
+        }
     }
 
     func stream(_ stream: SCStream, didStopWithError error: any Error) {

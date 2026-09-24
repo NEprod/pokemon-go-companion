@@ -6,7 +6,7 @@ GO Account Companion is a private, local-first Pokémon GO account intelligence 
 
 Phase 1 provides the Core Collection Engine: stable specimen UUIDs, transactional create/update/query/archive/restore workflows, immutable history, persisted observations with field-level confidence/provenance, internal tags, roles, recommended GO-tag state, and versioned JSON backup/full restore. Phase 2 adds a versioned raw/normalized/derived knowledge cache, atomic previous-good activation/rollback, deterministic CP/HP/reverse-level calculations, and cached 4,096-spread PvP IV rankings over frozen synthetic fixtures.
 
-Phase 3A adds a macOS-only diagnostic app for user-selected iPhone Mirroring window capture. Dale manually verified changing, usable Pokémon GO frames from Apple's iPhone Mirroring app. There is no production scanner, recognition/OCR, production data provider, species/meta ranking, battle/raid simulation, complete recommendation engine, sync, or mobile app. Synthetic fixture values are not live Pokémon GO data.
+Phase 3A provides user-selected iPhone Mirroring window capture; Phase 3B adds deterministic screen-family classification and bounded temporal continuity. Phase 3C adds targeted Detail text and Appraisal IV observations, temporary scan sessions, and safe Appraisal arrow-paging walkthroughs. Dale live validated all three milestones, including a 12-Pokémon walkthrough with consecutive same-species specimens. Private regression captures are optional local files, never required package resources. There is no production scanner, production data provider, species/meta ranking, battle/raid simulation, complete recommendation engine, sync, or mobile app. Synthetic fixture values are not live Pokémon GO data.
 
 ## Architecture at a glance
 
@@ -15,6 +15,7 @@ Phase 3A adds a macOS-only diagnostic app for user-selected iPhone Mirroring win
 - Future macOS and iOS apps use native SwiftUI shells.
 - Phase 3 macOS capture uses a ScreenCaptureKit adapter for a user-selected iPhone Mirroring window, with user-selected region capture as fallback. It is observation-only.
 - The Phase 3A diagnostic app exercises selected-window capture; see [manual verification](docs/SCANNING.md#phase-3a-iphone-mirroring-capture-diagnostic).
+- `GOCompanionScreenAnalysis` classifies frames; `GOCompanionExtraction` creates temporary observations, with Apple Vision isolated in `MacRecognitionAdapter`. No scan writes to the permanent collection.
 - User facts, normalized game knowledge, and disposable derived caches live in separate SQLite files.
 - Providers and future sync backends are ports/adapters, not domain dependencies.
 
@@ -55,6 +56,9 @@ Sources/
   GOCompanionPersistence/  collection plus three-layer SQLite adapters and forward migrations
   GOCompanionCapture/      platform-neutral capture diagnostic contracts (macOS target)
   MacCaptureAdapter/       ScreenCaptureKit selected-window adapter (macOS only)
+  GOCompanionScreenAnalysis/ platform-neutral screen-family classification
+  GOCompanionExtraction/   platform-neutral field observations and walkthroughs
+  MacRecognitionAdapter/   targeted Apple Vision text recognition
   CaptureDiagnostic/       minimal macOS capture test harness
   CSQLite/                 minimal system-library bridge
 Tests/GOCompanionTests/    domain, migration, cache-key tests and fake fixtures

@@ -44,17 +44,33 @@ var targets: [Target] = [
 #if os(macOS)
     products += [
         .library(name: "GOCompanionCapture", targets: ["GOCompanionCapture"]),
+        .library(name: "GOCompanionScreenAnalysis", targets: ["GOCompanionScreenAnalysis"]),
+        .library(name: "GOCompanionExtraction", targets: ["GOCompanionExtraction"]),
+        .library(name: "MacRecognitionAdapter", targets: ["MacRecognitionAdapter"]),
         .library(name: "MacCaptureAdapter", targets: ["MacCaptureAdapter"]),
         .executable(name: "CaptureDiagnostic", targets: ["CaptureDiagnostic"]),
     ]
     targets += [
         .target(name: "GOCompanionCapture"),
+        .target(name: "GOCompanionScreenAnalysis", dependencies: ["GOCompanionCapture"]),
+        .target(name: "GOCompanionExtraction", dependencies: ["GOCompanionCapture", "GOCompanionScreenAnalysis"]),
+        .target(name: "MacRecognitionAdapter", dependencies: ["GOCompanionCapture", "GOCompanionExtraction"]),
         .target(name: "MacCaptureAdapter", dependencies: ["GOCompanionCapture"]),
         .executableTarget(
             name: "CaptureDiagnostic",
-            dependencies: ["GOCompanionCapture", "MacCaptureAdapter"]
+            dependencies: [
+                "GOCompanionCapture", "GOCompanionScreenAnalysis", "GOCompanionExtraction", "MacCaptureAdapter",
+                "MacRecognitionAdapter",
+            ]
         ),
-        .testTarget(name: "CaptureDiagnosticTests", dependencies: ["GOCompanionCapture"]),
+        .testTarget(
+            name: "CaptureDiagnosticTests",
+            dependencies: [
+                "GOCompanionCapture", "GOCompanionScreenAnalysis", "GOCompanionExtraction", "MacCaptureAdapter",
+                "MacRecognitionAdapter",
+            ],
+            exclude: ["Fixtures"]
+        ),
     ]
 #endif
 
